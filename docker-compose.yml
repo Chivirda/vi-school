@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  web:
+    container_name: vi_school_web
+    image: nginx:latest
+    volumes:
+      - ./src:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "1180:80"
+    links:
+      - php
+  php:
+    container_name: vi_school_php
+    image: php:7.4-alpine
+    restart: always
+    volumes:
+      - /src
+    environment:
+      TIMEZONE: Europe/Moscow
+    links:
+      - mysql
+    working_dir: /src
+  mysql:
+    container_name: vi_school_mysql
+    image: mysql:latest
+    restart: always
+    ports:
+      - "11006:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vi_school_db
+      MYSQL_USER: serg
+      MYSQL_PASSWORD: serg
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
