@@ -3,29 +3,34 @@ require_once '../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
 
 $request = Request::createFromGlobals();
 $response = new Response();
 
-$name = $request->get("name", "World");
+$context = new RequestContext();
+$context->fromRequest($request);
 
-$map = [
-    '/hello' => './pages/hello.php',
-    '/bye' => './pages/bye.php'
-];
+$routes = new RouteCollection();
+$routes->add('hello', new Route('/hello/{name}', ['name' => 'World']));
+$routes->add('bye', new Route('/bye'));
 
-$path = $request->getPathInfo();
+$matcher = new UrlMatcher($routes, $context);
 
-if ($path == '/') {
-    print '<h1>Добрый день!</h1>';
+try {
+    extract($matcher->match($request->getPathInfo()), EXTR_SKIP);
+    ob_start();
+    include sprintf('./pages/%s.php', $_route);
+} catch (ResourceNotFoundException $exception) {
+    $response = new Response('Страница не существует', 404);
+} catch (Exception $exception) {
+    $response = new Response('Oшибка сервера', 500);
 }
 
-if (isset($map[$path])) {
-    require_once $map[$path];
-} elseif ($path != '/') {
-    $response->setStatusCode(404);
-    $response->setContent("Страница не найдена");
-}
 
 $response->send();
 
