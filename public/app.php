@@ -10,7 +10,7 @@ function is_leap_year($year = null)
     $year = date('Y');
   }
 
-  return 0 === $year % 400 || (0 === $year % 4 && 0 !== $year % 100);
+  return ($year % 400 === 0) || ($year % 4 === 0 && $year % 100 !== 0);
 }
 
 $routes = new RouteCollection();
