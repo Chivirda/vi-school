@@ -9,7 +9,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
 
-function is_leap_year($year = null)
+function is_leap_year($year = null): bool
 {
   if ($year === null) {
     $year = date('Y');

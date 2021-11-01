@@ -34,6 +34,7 @@ $argumentResolver = new ArgumentResolver();
 
 try {
     $request->attributes->add($matcher->match($request->getPathInfo()));
+
     $controller = $controllerResolver->getController($request);
     $arguments = $argumentResolver->getArguments($request, $controller);
 
