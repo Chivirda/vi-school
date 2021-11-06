@@ -2,11 +2,12 @@
 
 namespace App;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class LeapYearController
 {
-    public function index($request): Response
+    public function index(Request $request): Response
     {
         if (is_leap_year($request->attributes->get('year'))) {
             return new Response('Yep, this is a leap year!');

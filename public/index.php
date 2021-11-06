@@ -36,9 +36,9 @@ try {
     $request->attributes->add($matcher->match($request->getPathInfo()));
 
     $controller = $controllerResolver->getController($request);
-    $arguments = $argumentResolver->getArguments($request, $controller);
+//    $arguments = $argumentResolver->getArguments($request, $controller);
 
-    $response = call_user_func($controller, $arguments);
+    $response = call_user_func($controller, $request);
 } catch (ResourceNotFoundException $exception) {
     $response = new Response('Страница не существует', 404);
 } catch (Exception $exception) {
